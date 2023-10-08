@@ -132,6 +132,7 @@ class FilterSection {
             expanded: false,
             fields: [
                 FilterField.SHIPMENT_STATUS(),
+                FilterField.EXECUTION_STATUS(),
                 FilterField.SHIPMENT_CANCELLED(),
                 FilterField.PLANNING_STATUS(),
                 FilterField.DELIVERY_ORDER_STATUS(),
@@ -446,7 +447,7 @@ class FilterField {
     static PICKUP_LOCATION({ listViewType, $store }: IGetFiltersParameters): IFilterField {
         return {
             id: 'PickUpLocation',
-            label: i18n.t('FILTERS.PICKUP_LOCATION').toString(),
+            label: i18n.t('FILTERS.PICK_UP_LOCATION').toString(),
             placeholder: i18n.t('PLACEHOLDERS.PICKUP_LOCATION').toString(),
             type: FilterTypeEnum.multiselect,
             multiselect: {
@@ -861,6 +862,35 @@ class FilterField {
         };
     }
 
+    static EXECUTION_STATUS(): IFilterField {
+        return {
+            id: 'executionStatusGroups',
+            placeholder: i18n.t('PLACEHOLDERS.DROPDOWN').toString(),
+            label: i18n.t('FILTERS.DEMURRAGE_AND_DETENTION_STATUS').toString(),
+            
+            type: FilterTypeEnum.multiselect,
+            hidden: true,
+            multiselect: {
+                listMaxHeight: '240px',
+                emptyOptionsMessage: i18n.t('NO_RESULTS').toString(),
+                
+                options: [
+                    { value: getPrimaryExecutiveStatusDisplayName(PrimaryExecutiveStatus.IN_TRANSIT) },
+                    { value: getPrimaryExecutiveStatusDisplayName(PrimaryExecutiveStatus.ARRIVED_AT_FINAL_PORT) },
+                    { value: getPrimaryExecutiveStatusDisplayName(PrimaryExecutiveStatus.INTERMODAL_IN_TRANSIT) },
+                    { value: getPrimaryExecutiveStatusDisplayName(PrimaryExecutiveStatus.AT_INLAND_TERMINAL) },
+                    { value: getPrimaryExecutiveStatusDisplayName(PrimaryExecutiveStatus.DELIVERY_IN_PROGRESS) },
+                    { value: getPrimaryExecutiveStatusDisplayName(PrimaryExecutiveStatus.CARGO_DELIVERED) },
+                    { value: getPrimaryExecutiveStatusDisplayName(PrimaryExecutiveStatus.EMPTY_RETURNED) },
+                ],
+            },
+            browserQueryMappingRules: ['MULTISELECT'],
+            apiQueryMappingRules: ['MULTISELECT'],
+            savedFilterMappingRules: ['MULTISELECT'],
+        };
+    }
+
+
     static EXCLUDE_FEE_TYPE(): IFilterField {
         return {
             id: 'excludeFeeType',
@@ -986,6 +1016,13 @@ class FilterField {
                     { label: i18n.t('PRIORITY_LEVEL.PRIORITY_TWO').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_TWO').toString() },
                     { label: i18n.t('PRIORITY_LEVEL.PRIORITY_THREE').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_THREE').toString() },
                     { label: i18n.t('PRIORITY_LEVEL.PRIORITY_FOUR').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_FOUR').toString() },
+                    { label: i18n.t('PRIORITY_LEVEL.PRIORITY_FIVE').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_FIVE').toString() },
+                    { label: i18n.t('PRIORITY_LEVEL.PRIORITY_SIX').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_SIX').toString() },
+                    { label: i18n.t('PRIORITY_LEVEL.PRIORITY_SEVEN').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_SEVEN').toString() },
+                    // comented below priorities as they are not configured currently
+                    // { label: i18n.t('PRIORITY_LEVEL.PRIORITY_EIGHT').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_EIGHT').toString() },
+                    // { label: i18n.t('PRIORITY_LEVEL.PRIORITY_NINE').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_NINE').toString() },
+                    // { label: i18n.t('PRIORITY_LEVEL.PRIORITY_TEN').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_TEN').toString() },
                     { label: i18n.t('PRIORITY_LEVEL.PRIORITY_OTHER').toString(), value: i18n.t('PRIORITY_LEVEL.PRIORITY_OTHER').toString() },
                 ],
             },
@@ -996,14 +1033,14 @@ class FilterField {
     }
 
     static SHIPMENT_CANCELLED(): IFilterField {
-            return {
-                id: 'shipmentCancelled',
-                label: i18n.t('FILTERS.SHOW_CANCELLED_SI_EQUIPMENTS').toString(),
-                type: FilterTypeEnum.switch,
-                browserQueryMappingRules: ['SWITCH'],
-                apiQueryMappingRules: ['SWITCH'],
-                scmAppliedFiltersMappingRules: ['SWITCH'],
-                savedFilterMappingRules: ['SWITCH'],
-            }
-        }  
+        return {
+            id: 'shipmentCancelled',
+            label: i18n.t('FILTERS.SHOW_CANCELLED_SI_SHIPMENTS').toString(),
+            type: FilterTypeEnum.switch,
+            browserQueryMappingRules: ['SWITCH'],
+            apiQueryMappingRules: ['SWITCH'],
+            scmAppliedFiltersMappingRules: ['SWITCH'],
+            savedFilterMappingRules: ['SWITCH'],
+        };
+    }
 }
