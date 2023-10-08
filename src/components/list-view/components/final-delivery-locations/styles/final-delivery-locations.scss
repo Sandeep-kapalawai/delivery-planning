@@ -1,0 +1,79 @@
+.delivery-legs-basic-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: var(--mdt-core-spacing-5px);
+    > div {
+        display: flex;
+        border-radius: var(--mdt-core-spacing-5px);
+        background: var(--mdt-theme-palette-functional-100);
+        padding: var(--mdt-core-spacing-8px);
+        margin-bottom: 24px;
+        align-items: center;
+        :nth-child(1) {
+            color: var(--mdt-theme-palette-functional-600);
+        }
+        > span {
+            margin-left: var(--mdt-core-spacing-5px);
+            margin-right: var(--mdt-core-spacing-5px);
+        }
+    }
+    > div:not(:last-child) {
+        margin-right: var(--mdt-core-spacing-12px);
+    }
+}
+
+.delivery-legs {
+    border: var(--mdt-core-border-width) var(--mdt-core-border-style) var(--mdt-theme-palette-functional-300);
+    border-radius: 8px;
+    box-shadow: var(--mdt-theme-box-shadow-2);
+    margin-bottom: var(--mdt-core-spacing-24px);
+
+    &__header {
+        padding: var(--mdt-core-spacing-20px) var(--mdt-core-spacing-16px);
+        display: flex;
+        align-items: center;
+
+        > div {
+            margin-right: var(--mdt-core-spacing-12px);
+        }
+
+        :nth-child(1) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        :nth-child(2) {
+            font-weight: var(--mdt-brand-font--default--bold-font-weight);
+        }
+
+        .iconbg {
+            color: var(--mdt-theme-outlined);
+            border-radius: 100%;
+            background: var(--mdt-theme-filled);
+            width: var(--mdt-core-spacing-32px);
+            height: var(--mdt-core-spacing-32px);
+        }
+    }
+
+    &__location {
+        display: flex;
+        padding: var(--mdt-core-spacing-12px) var(--mdt-core-spacing-16px);
+        font-size: var(--mdt-brand-font--small-font-size);
+        word-break: break-all;
+        .label {
+            width: 25%;
+            align-items: center;
+            color: var(--mdt-theme-list-item-text-disabled);
+        }
+
+        .labelValue {
+            width: 75%;
+        }
+    }
+
+    > div:not(:first-child) {
+        border-top: 1px dashed var(--mdt-theme-palette-functional-300);
+    }
+}

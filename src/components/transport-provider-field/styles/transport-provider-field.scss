@@ -1,0 +1,9 @@
+.transport-provider-field {
+    &_name {
+        margin-bottom: var(--mdt-core-spacing-4px);
+    }
+
+    &_code {
+        color: var(--mdt-theme-palette-functional-600);
+    }
+}

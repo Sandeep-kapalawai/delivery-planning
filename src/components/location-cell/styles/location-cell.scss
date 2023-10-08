@@ -1,0 +1,21 @@
+.location-cell {
+    position: relative;
+
+    &_content,
+    &_tooltip {
+        .location-field {
+            &_becode {
+                color: var(--mdt-theme-on-background-color);
+                margin-bottom: 0;
+            }
+
+            &_name {
+                color: var(--mdt-theme-palette-functional-600);
+            }
+        }
+    }
+
+    &_tooltip {
+        font-size: var(--font-size-sm);
+    }
+}

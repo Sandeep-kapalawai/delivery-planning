@@ -1,0 +1,10 @@
+.delivery-plan-transport-details {
+    &_fields {
+        display: flex;
+        flex-wrap: wrap;
+
+        > div {
+            margin-right: var(--mdt-core-spacing-16px);
+        }
+    }
+}

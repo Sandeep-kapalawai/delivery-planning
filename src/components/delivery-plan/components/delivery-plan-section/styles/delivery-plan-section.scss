@@ -1,0 +1,30 @@
+.delivery-plan-section {
+    margin-bottom: var(--mdt-core-spacing-16px);
+
+    &_header {
+        display: flex;
+        align-items: center;
+        gap: var(--mdt-core-spacing-8px);
+        padding: var(--mdt-core-spacing-12px) 0;
+        border-bottom: 1px solid var(--mdt-theme-palette-functional-300);
+
+        &_title {
+            font-size: var(--mdt-brand-font-size-m);
+            font-family: var(--mdt-brand-font-family-display);
+        }
+
+        &_icon {
+            height: var(--mdt-core-spacing-20px);
+        }
+    }
+
+    &_content {
+        padding: var(--mdt-core-spacing-16px) 0;
+    }
+}
+
+@media (min-width: 992px) {
+    .delivery-plan-section {
+        min-width: 1200px;
+    }
+}

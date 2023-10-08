@@ -1,0 +1,9 @@
+.update-details-section {
+    padding: var(--mdt-core-spacing-8px) 0;
+
+    &_header {
+        display: flex;
+        align-items: center;
+        padding: var(--mdt-core-spacing-4px) 0;
+    }
+}

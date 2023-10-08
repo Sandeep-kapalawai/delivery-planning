@@ -1,0 +1,26 @@
+.delivery-plan {
+    &_row {
+        margin-bottom: var(--mdt-core-spacing-16px) !important;
+
+        &_actions {
+            padding: var(--mdt-core-spacing-16px) 0;
+            background-color: var(--mdt-theme-palette-primary-50);
+
+            mc-button {
+                margin-right: var(--mdt-core-spacing-10px);
+            }
+        }
+    }
+
+    &_delivery-leg {
+        margin-bottom: var(--mdt-core-spacing-16px);
+    }
+
+    &_add-leg-button-wrapper {
+        margin: var(--mdt-core-spacing-16px) 0;
+    }
+
+    &_mc-notification-wrapper {
+        margin-bottom: var(--mdt-core-spacing-8px);
+    }
+}

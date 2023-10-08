@@ -1,0 +1,23 @@
+variables:
+  - name: lhci-applogin-url
+    value: "https://scm-preprod.maersk.com/cshub"
+  - name: ci.upload.serverBaseUrl
+    value: "https://apiazewrmlns001lthouse.azurewebsites.net/"
+  - name: ci.collect.url
+    value: '["https://scm-preprod.maersk.com/scm/deliveryplanning/fcl"]'
+  - name: ci.upload.token
+    value: "$(destinationdp-lhci-build-token)"
+  - name: lhciProbeUrl
+    value: "https://scm-preprod.maersk.com/scm/deliveryplanning/"
+  - name: lhciHubPasswordSecretname
+    value: "cda-nscp-08"
+  - name: lhci-hub-pass
+    value: "$(cda-nscp-08)"
+  - name: lhci-hub-user
+    value: "cda.nscp.08@maersk.onmicrosoft.com"
+  - name: ci.upload.basicAuth.password
+    value: "$(lhci-server-basic-auth-password)"
+  - name: serviceConnectionAutomation
+    value: "SCM_Automation_KV-Destination Repo"
+  - name: sharedKeyVaultName
+    value: "kyvazewdmlns001scmshard"

@@ -1,0 +1,30 @@
+variables:
+    - name: sonarQubeServiceConnection
+      value: 'ado_sonar_maerskdev_net-Destination Repo'
+    - name: sonarQubeProjectName
+      value: 'scm-destination-delivery-planning-ui'
+    - name: sonarProjectBaseDir
+      value: './UI/delivery-planning'
+    - name: sonarJSReportPaths
+      value: UI/delivery-planning/coverage/lcov.info
+    - name: sonarExclusions
+      value: '**/*.spec.*,*.js,*.json,jest/mocks/**,mock-server/**,pipelines/**,
+          **/interfaces/**,**/static/**,**/styles/**,
+          src/i18n/**,src/logic/validations/index.ts,src/router/config/**,src/router/routes/**,src/router/index.ts,
+          src/components/user-actions/components/update-details/logic/index.ts,
+          src/bootstrap.ts,src/initialize.ts,src/main.ts,src/template.html'
+    - name: serviceConnectionKeyVault
+      value: 'NewSCM_Non_Prod'
+    - name: keyVaultName
+      value: 'kyvazewdmlns001scmshard'
+    - name: secretsFilter
+      value: 'scmshard-tools-nexus-maeerskdev-net-email,
+          scmshard-tools-nexus-maeerskdev-net-token'
+    - name: copyContents
+      value: false
+    - name: SourceFolder
+      value: './UI/delivery-planning/'
+    - name: continueOnTestFailure
+      value: false
+    - name: testBypass
+      value: false

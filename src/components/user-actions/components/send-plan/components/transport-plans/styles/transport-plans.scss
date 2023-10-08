@@ -1,0 +1,14 @@
+.transport-plans {
+    width: 100%;
+
+    .transport-plans-item {
+        display: flex;
+        flex-direction: column;
+        gap: var(--mdt-core-spacing-16px);
+        margin-top: var(--mdt-core-spacing-4px);
+    }
+    .multiple-value-cell__item{
+        --color-gray-900: #141414;
+    }
+   
+}

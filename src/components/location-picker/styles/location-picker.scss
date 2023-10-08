@@ -1,0 +1,14 @@
+.location-picker {
+    position: relative;
+
+    &_list-container {
+        width: 100%;
+        position: absolute;
+        top: 62px;
+        z-index: 999;
+
+        &.hide-label {
+            top: 42px;
+        }
+    }
+}

@@ -1,0 +1,21 @@
+.filter-field {
+    &_multiselect {
+        &_list-container {
+            position: relative;
+            margin-top: var(--mdt-core-spacing-8px);
+
+            mc-c-list {
+                width: 100%;
+                position: absolute;
+                z-index: 1;
+            }
+        }
+
+        &_tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: var(--mdt-core-spacing-8px);
+            gap: var(--mdt-core-spacing-4px);
+        }
+    }
+}

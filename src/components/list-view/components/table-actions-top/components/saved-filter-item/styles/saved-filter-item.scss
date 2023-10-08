@@ -1,0 +1,35 @@
+.saved-filter-card-item {
+    border-radius: 0.5rem;
+    border: var(--mdt-core-border-width) var(--mdt-core-border-style) var(--mdt-theme-border-outlined);
+    margin: 0.5rem;
+    width: calc(100% - 20px);
+    &.active {
+        background-color: var(--mdt-theme-filled-focus);
+    }
+    .saved-filter-card {
+        padding: 0.5rem 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .tooltip {
+            display: block;
+            max-width: 200px;
+            word-wrap: break-word;
+        }
+        .saved-filter-name {
+            font-size: var(--mdt-brand-font-size-s);
+            line-height: 1.25rem;
+            width: 200px;
+            display: inline-flex;
+            > span {
+                white-space: nowrap;
+                overflow: hidden !important;
+                text-overflow: ellipsis;
+            }
+        }
+        .action-buttons {
+            display: flex;
+            gap: var(--mdt-core-spacing-4px);
+        }
+    }
+}

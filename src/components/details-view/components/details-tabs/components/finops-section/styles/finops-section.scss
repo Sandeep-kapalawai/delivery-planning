@@ -1,0 +1,21 @@
+.finops-section {
+    padding: var(--mdt-core-spacing-24px);
+    &__header {
+        color: var(--color-gray-600);
+    }
+    &__link {
+        padding-top: var(--mdt-core-spacing-12px);
+    }
+    &__view-link {
+        display: flex;
+        color: var(--mdt-theme-palette-primary-600);
+        font-size: var(--text-sm);
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    &__new-tab {
+        margin-top: var(--mdt-core-spacing-1px);
+        vertical-align: top;
+        margin-right: var(--mdt-core-spacing-4px);
+    }
+}

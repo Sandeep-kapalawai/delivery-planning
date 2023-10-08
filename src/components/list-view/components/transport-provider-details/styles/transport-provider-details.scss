@@ -1,0 +1,20 @@
+.transport-provider {
+    &_header-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: var(--mdt-core-spacing-5px);
+        > div {
+            display: flex;
+            gap: var(--mdt-core-spacing-10px);
+            border-radius: var(--mdt-core-spacing-5px);
+            background: var(--mdt-theme-palette-functional-100);
+            padding: var(--mdt-core-spacing-8px);
+            align-items: center;
+        }
+    }
+
+    .party-card-header {
+        padding: var(--mdt-core-spacing-20px);
+    }
+}

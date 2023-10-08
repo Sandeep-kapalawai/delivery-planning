@@ -1,0 +1,12 @@
+.delivery-leg-transport-section {
+    padding: var(--mdt-core-spacing-16px);
+
+    &_header {
+        font-weight: var(--mdt-brand-font-weight-bold);
+        margin-bottom: var(--mdt-core-spacing-8px);
+    }
+
+    &_row {
+        margin-bottom: var(--mdt-core-spacing-24px);
+    }
+}

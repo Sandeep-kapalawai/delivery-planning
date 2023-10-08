@@ -1,0 +1,9 @@
+.delivery-location {
+    & > div:not(:last-child) {
+        margin-bottom: var(--mdt-core-spacing-8px);
+    }
+
+    .address-lines {
+        color: var(--mdt-theme-palette-functional-600);
+    }
+}

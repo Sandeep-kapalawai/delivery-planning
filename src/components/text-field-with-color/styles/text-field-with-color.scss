@@ -1,0 +1,21 @@
+:root {
+    --text-field-value-color: var(--mdt-theme-on-background-color);
+}
+
+.text-field-with-color {
+    gap: var(--mdt-core-spacing-8px);
+
+    &_value {
+        display: flex;
+        align-items: center;
+        gap: var(--mdt-core-spacing-4px);
+        color: var(--text-field-value-color);
+
+        &_circle {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            background: var(--text-field-value-color);
+        }
+    }
+}

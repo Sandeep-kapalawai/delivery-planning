@@ -1,0 +1,88 @@
+.delivery-leg {
+    display: flex;
+
+    &_timeline {
+        display: flex;
+        flex-direction: column;
+
+        &_icon {
+            border: 2px solid var(--mdt-theme-palette-functional-400);
+            border-radius: 50%;
+            padding: var(--mdt-core-spacing-4px);
+        }
+
+        &_line {
+            height: calc(100% - 38px);
+            align-self: center;
+            border-left: 2px solid var(--mdt-theme-palette-functional-400);
+        }
+    }
+
+    &_leg {
+        width: 100%;
+
+        &_header {
+            display: flex;
+            align-items: center;
+
+            &_index {
+                margin: 0 var(--mdt-core-spacing-32px) 0 var(--mdt-core-spacing-8px);
+            }
+
+            &_info {
+                display: flex;
+                gap: var(--mdt-core-spacing-32px);
+
+                .text-field,
+                .text-field-with-color {
+                    display: flex;
+                    align-items: center;
+                    margin-right: var(--mdt-core-spacing-32px);
+
+                    .label {
+                        margin-right: var(--mdt-core-spacing-8px);
+                    }
+                }
+            }
+
+            &_actions {
+                flex: 1;
+                display: flex;
+                justify-content: flex-end;
+
+                &_copy-leg-button {
+                    --color-text-button-plain-default: var(--mdt-theme-palette-primary-300);
+                    --color-text-button-plain-default-hover: var(--mdt-theme-palette-primary-300);
+                }
+
+                &_cancel-leg-button,
+                &_remove-leg-button {
+                    --color-text-button-plain-default: var(--mdt-theme-palette-secondary-red-300);
+                    --color-text-button-plain-default-hover: var(--mdt-theme-palette-secondary-red-300);
+                }
+            }
+        }
+
+        &_section {
+            height: calc(100% - var(--mdt-core-spacing-16px));
+            margin: var(--mdt-core-spacing-8px);
+            border: 1px solid var(--mdt-theme-palette-functional-300);
+            border-radius: var(--mdt-core-border-radius-m);
+        }
+        &_update-status {
+            &-link {
+                color: var(--mdt-theme-palette-primary-600);
+                cursor: pointer;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    &.disabled {
+        opacity: 0.75;
+        cursor: default;
+    }
+}

@@ -1,0 +1,21 @@
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    &__all-filter-wrapper {
+        padding: var(--mdt-core-spacing-1px) var(--mdt-core-spacing-1px);
+    }
+
+    .separator {
+        height: var(--mdt-core-spacing-22px);
+        border-right: var(--mdt-core-spacing-1px) solid var(--mdt-theme-palette-functional-300);
+    }
+    .mdsc-tools-panel__content {
+       padding-bottom: 50vh !important;
+       height: calc(100% - var(--mdt-core-spacing-200px));
+    }
+    .saved-filter-notification {
+        width: calc(100% - var(--mdt-core-spacing-30px));
+    }
+}

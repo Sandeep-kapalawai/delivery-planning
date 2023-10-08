@@ -1,0 +1,513 @@
+name: $(Date:yyyyMMdd).$(Build.BuildId) -
+
+trigger:
+    paths:
+        include:
+            - UI/delivery-planning/*
+            - Automation/tests/UI/delivery-planning/**/*_test.js
+    branches:
+        include:
+            - master
+
+variables:
+    - template: vars/vars-global.yml
+    - template: vars/vars-automation.yml
+
+resources:
+    repositories:
+        - repository: templates #the name used to reference this resource
+          type: github # the type for github
+          name: Maersk-Global/scm-central-pipeline-templates #the repo name
+          endpoint: 'github.com_Aravind-Muralitharakannan' # Replace with your GH connection
+
+stages:
+    #############################################################   Node Version Stage    ######################################################################
+
+    - stage: GetNodeVersion
+      displayName: Get Node Version fron package.json file
+
+      jobs:
+          - job: Get_Set_Node_Version
+            displayName: Get node version from package.json file
+            pool:
+                vmImage: ${{ variables.vmImage }}
+            steps:
+                - task: PythonScript@0
+                  name: ProduceVar
+                  inputs:
+                      scriptSource: filepath
+                      pythonInterpreter: python3
+                      scriptPath: $(System.DefaultWorkingDirectory)/${{ variables.workingDir }}pipelines/scripts/nodejs.py
+
+    #############################################################   Build Stage   ##############################################################################
+
+    - stage: CI
+      displayName: Building Stage
+      dependsOn: GetNodeVersion
+      condition: succeeded('GetNodeVersion')
+      variables:
+          - template: vars/vars-build.yml
+          - name: nodeVersionFromFile
+            value: $[ stageDependencies.GetNodeVersion.Get_Set_Node_Version.outputs['ProduceVar.nodeversion'] ]
+
+      jobs:
+          - template: cicd/ui-gatedchecks-template.yml@templates
+            parameters:
+                nodeversion: $(nodeVersionFromFile)
+                workingDir: ${{ variables.workingDir }}
+                testBypass: ${{ variables.testBypass }}
+                keyVaultName: ${{ variables.keyVaultName }}
+                secretsFilter: ${{ variables.secretsFilter }}
+                sonarQubeProjectName: ${{ variables.sonarQubeProjectName }}
+                continueOnTestFailure: ${{ variables.continueOnTestFailure }}
+                serviceConnectionKeyVault: ${{ variables.serviceConnectionKeyVault }}
+                sonarQubeServiceConnection: ${{ variables.sonarQubeServiceConnection }}
+                sonarProjectBaseDir: ${{ variables.sonarProjectBaseDir }}
+                sonarJSReportPaths: ${{ variables.sonarJSReportPaths }}
+                sonarExclusions: ${{ variables.sonarExclusions }}
+
+          - template: cicd/ui-build-pipeline.yml@templates
+            parameters:
+                nodeversion: $(nodeVersionFromFile)
+                workingDir: ${{ variables.workingDir }}
+                testBypass: ${{ variables.testBypass }}
+                copyContents: ${{ variables.copyContents }}
+                SourceFolder: ${{ variables.SourceFolder }}
+                artifactName: ${{ variables.artifactName }}
+                keyVaultName: ${{ variables.keyVaultName }}
+                secretsFilter: ${{ variables.secretsFilter }}
+                sonarQubeProjectName: ${{ variables.sonarQubeProjectName }}
+                continueOnTestFailure: ${{ variables.continueOnTestFailure }}
+                serviceConnectionKeyVault: ${{ variables.serviceConnectionKeyVault }}
+                sonarQubeServiceConnection: ${{ variables.sonarQubeServiceConnection }}
+                sonarProjectBaseDir: ${{ variables.sonarProjectBaseDir }}
+                sonarJSReportPaths: ${{ variables.sonarJSReportPaths }}
+                sonarExclusions: ${{ variables.sonarExclusions }}
+
+    #############################################################   Deployment Stage    ########################################################################
+
+    - stage: Development
+      displayName: Development Environment Deployment
+      dependsOn:
+          - CI
+      condition: and( succeeded('CI'), eq(variables.isPR, 'False') )
+      variables:
+          - template: vars/vars-dev.yml
+
+      jobs:
+          - deployment: ${{ variables.deployment }}
+            pool:
+                vmImage: ${{ variables.vmImage }}
+            environment: ${{ variables.environment }}
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - template: cicd/build-promotion-pipeline-v2.yml@templates
+                              parameters:
+                                  workingDir: ${{ variables.workingDir }}
+                                  artifactName: drop
+                                  keyvaults: kyvaz${{ variables.env }}mlns001dst
+                                  slotName: 'stage'
+                                  slotcreate: true
+                                  ping: true
+                                  path: ${{ variables.appPath }}
+                                  expectedStatusCode: 200
+                                  template: templates
+                                  resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                                  appType: ${{ variables.appType }}
+                                  appServiceName: ${{ variables.appName }}
+                                  forceRestart: ${{ variables.forceRestart }}
+                                  keyVaultName: ${{ variables.keyVaultName }}
+                                  secretsFilter: ${{ variables.secretsFilter }}
+                                  replacetokens: ${{ variables.replacetokens }}
+                                  StartupCommand: ${{ variables.StartupCommand }}
+                                  serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                                  deploymentPackagePath: ${{ variables.deploymentPackagePath }}
+                                  enableCustomDeployment: ${{ variables.enableCustomDeployment }} # only for LinuxOS
+                                  replacetokensTargetFiles: ${{ variables.replacetokensTargetFiles }}
+                                  RemoveAdditionalFilesFlag: ${{ variables.RemoveAdditionalFilesFlag }} # only for LinuxOS
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: 'Deploy_to_Dev'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Swap
+                expectedStatusCode: 200
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: ''
+                jobFails: 'DEV_SwapTheSlots_Swap'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Rollback
+                expectedStatusCode: 200
+
+    #############################################################   Deployment Test   ##########################################################################
+
+    - stage: Test
+      displayName: Test Environment Deployment
+      dependsOn:
+          - Development
+      condition: and( succeeded('Development'), eq(variables.isPR, 'False') )
+      variables:
+          - template: vars/vars-test.yml
+
+      jobs:
+          - deployment: ${{ variables.deployment }}
+            pool:
+                vmImage: ${{ variables.vmImage }}
+            environment: ${{ variables.environment }}
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - template: cicd/build-promotion-pipeline-v2.yml@templates
+                              parameters:
+                                  workingDir: ${{ variables.workingDir }}
+                                  artifactName: drop
+                                  keyvaults: kyvaz${{ variables.env }}mlns001dst
+                                  appType: ${{ variables.appType }}
+                                  appServiceName: ${{ variables.appName }}
+                                  slotName: 'stage'
+                                  slotcreate: true
+                                  ping: true
+                                  path: ${{ variables.appPath }}
+                                  expectedStatusCode: 200
+                                  template: templates
+                                  resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                                  forceRestart: ${{ variables.forceRestart }}
+                                  keyVaultName: ${{ variables.keyVaultName }}
+                                  secretsFilter: ${{ variables.secretsFilter }}
+                                  replacetokens: ${{ variables.replacetokens }}
+                                  StartupCommand: ${{ variables.StartupCommand }}
+                                  serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                                  deploymentPackagePath: ${{ variables.deploymentPackagePath }}
+                                  enableCustomDeployment: ${{ variables.enableCustomDeployment }} # only for LinuxOS
+                                  replacetokensTargetFiles: ${{ variables.replacetokensTargetFiles }}
+                                  RemoveAdditionalFilesFlag: ${{ variables.RemoveAdditionalFilesFlag }} # only for LinuxOS
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: 'Deploy_to_Test'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Swap
+                expectedStatusCode: 200
+                cachePurgePath: $(cachePurgePath)
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: ''
+                jobFails: 'TEST_SwapTheSlots_Swap'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Rollback
+                expectedStatusCode: 200
+                cachePurgePath: $(cachePurgePath)
+
+    #############################################################   Automation   ##############################################################################
+
+    - template: '../../../Automation/pipelines/automation-parallel.yml'
+      parameters:
+          ReportID: ${{ variables.ReportID }}
+          AutomationTests: tests/${{ variables.automationDir }}/**/*_test.js
+          UIApplicationUrl: ${{ variables.UIApplicationUrl }}
+          CheckPassPercentage: ${{ variables.CheckPassPercentage }}
+          PassPercentage: ${{ variables.PassPercentage }}
+
+    #############################################################   Deployment Pre-Prod   ######################################################################
+
+    - stage: PreProd
+      displayName: Pre Production Environment Deployment
+      dependsOn:
+          - Automation
+      condition: and( succeeded('Automation'), eq(variables.isPR, 'False') )
+      variables:
+          - template: vars/vars-preprod.yml
+
+      jobs:
+          - deployment: ${{ variables.deployment }}
+            pool:
+                vmImage: ${{ variables.vmImage }}
+            environment: ${{ variables.environment }}
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - template: cicd/build-promotion-pipeline-v2.yml@templates
+                              parameters:
+                                  workingDir: ${{ variables.workingDir }}
+                                  artifactName: drop
+                                  keyvaults: kyvaz${{ variables.env }}mlns001dst
+                                  appType: ${{ variables.appType }}
+                                  appServiceName: ${{ variables.appName }}
+                                  resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                                  slotName: stage
+                                  ping: true
+                                  path: ${{ variables.appPath }}
+                                  expectedStatusCode: 200
+                                  template: templates
+                                  forceRestart: ${{ variables.forceRestart }}
+                                  keyVaultName: ${{ variables.keyVaultName }}
+                                  secretsFilter: ${{ variables.secretsFilter }}
+                                  replacetokens: ${{ variables.replacetokens }}
+                                  StartupCommand: ${{ variables.StartupCommand }}
+                                  serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                                  deploymentPackagePath: ${{ variables.deploymentPackagePath }}
+                                  enableCustomDeployment: ${{ variables.enableCustomDeployment }} # only for LinuxOS
+                                  replacetokensTargetFiles: ${{ variables.replacetokensTargetFiles }}
+                                  RemoveAdditionalFilesFlag: ${{ variables.RemoveAdditionalFilesFlag }} # only for LinuxOS
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: ${{ variables.deployment }}
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Swap
+                expectedStatusCode: 200
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: ''
+                jobFails: 'PREPROD_SwapTheSlots_Swap'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Rollback
+                expectedStatusCode: 200
+
+    #############################################################  LightHouse   ##########################################################################
+         
+    - stage: LightHouse
+      displayName: Light_House_CI_Execution Deployment
+      dependsOn:
+        - PreProd
+      condition: and( succeeded('PreProd'), eq(variables.isPR, 'False') )
+      variables:
+         - template: vars/vars-preprod.yml
+         - template: vars/vars-lhci-preprod.yml
+
+      jobs:
+         - job: Light_House_CI_Execution
+           displayName: Light House CI Execution
+           pool:
+                vmImage: ${{ variables.vmImage }}
+           steps:
+             - task: PowerShell@2
+               displayName: 'Initialization'
+               inputs:
+                  targetType: 'inline'
+                  script: |
+                        git config --global core.longpaths true
+             - template: lhci-reporting/lhci-execution.yml@templates
+               parameters:
+                    centralRepoName: templates
+                    serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                    keyVaultName: ${{ variables.keyVaultName }}
+                    secretsFilter: ${{ variables.secretsFilter }}
+                    sharedKeyVaultName: ${{ variables.sharedKeyVaultName }}
+                    lhciProbeUrl: ${{ variables.lhciProbeUrl }}
+                    lhciHubPasswordSecretname: ${{ variables.lhciHubPasswordSecretname }}
+                    appRestartTime: 30
+                    serviceConnectionAutomation: ${{ variables.serviceConnectionAutomation }} 
+
+    #############################################################   Deployment Prod   ##########################################################################
+
+    - stage: Prod
+      displayName: Production Environment Deployment
+      dependsOn:
+          - PreProd
+      condition: and( succeeded('PreProd'), eq(variables.isPR, 'False') )
+      variables:
+          - template: vars/vars-prod.yml
+
+      jobs:
+          - deployment: ${{ variables.deployment }}
+            pool:
+                vmImage: ${{ variables.vmImage }}
+            environment: ${{ variables.environment }}
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - template: cicd/build-promotion-pipeline-v2.yml@templates
+                              parameters:
+                                  workingDir: ${{ variables.workingDir }}
+                                  artifactName: drop
+                                  keyvaults: kyvaz${{ variables.env }}mlns001dst
+                                  appType: ${{ variables.appType }}
+                                  appServiceName: ${{ variables.appName }}
+                                  resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                                  slotName: stage
+                                  ping: true
+                                  path: ${{ variables.appPath }}
+                                  expectedStatusCode: 200
+                                  template: templates
+                                  forceRestart: ${{ variables.forceRestart }}
+                                  keyVaultName: ${{ variables.keyVaultName }}
+                                  secretsFilter: ${{ variables.secretsFilter }}
+                                  replacetokens: ${{ variables.replacetokens }}
+                                  StartupCommand: ${{ variables.StartupCommand }}
+                                  serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                                  deploymentPackagePath: ${{ variables.deploymentPackagePath }}
+                                  enableCustomDeployment: ${{ variables.enableCustomDeployment }} # only for LinuxOS
+                                  replacetokensTargetFiles: ${{ variables.replacetokensTargetFiles }}
+                                  RemoveAdditionalFilesFlag: ${{ variables.RemoveAdditionalFilesFlag }} # only for LinuxOS
+                                  cachePurgePath: $(cachePurgePath)
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: ${{ variables.deployment }}
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Swap
+                expectedStatusCode: 200
+                cachePurgePath: $(cachePurgePath)
+
+          - template: cicd/azure-swap-rollback-container.yml@templates
+            parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: ''
+                jobFails: 'PROD_SwapTheSlots_Swap'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Rollback
+                expectedStatusCode: 200
+                cachePurgePath: $(cachePurgePath)
+
+    #############################################################   UAT Stage    ########################################################################
+
+    - stage: UAT
+      displayName: UAT Environment Deployment
+      dependsOn:
+        - PreProd
+      condition: and( succeeded('PreProd'), eq(variables.isPR, 'False') )
+      variables:
+        - template: vars/vars-uat.yml
+
+      jobs:
+        - deployment: ${{ variables.deployment }}
+          pool:
+                vmImage: ${{ variables.vmImage }}
+          environment: ${{ variables.environment }}
+          strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - template: cicd/build-promotion-pipeline-v2.yml@templates
+                              parameters:
+                                workingDir: ${{ variables.workingDir }}
+                                artifactName: drop
+                                keyvaults: kyvaz${{ variables.env }}mlns003scmshard
+                                appType: ${{ variables.appType }}
+                                appServiceName: ${{ variables.appName }}
+                                slotName: 'stage'
+                                slotcreate: true
+                                ping: true
+                                path: ${{ variables.appPath }}
+                                expectedStatusCode: 200
+                                template: templates
+                                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                                forceRestart: ${{ variables.forceRestart }}
+                                keyVaultName: ${{ variables.keyVaultName }}
+                                secretsFilter: ${{ variables.secretsFilter }}
+                                replacetokens: ${{ variables.replacetokens }}
+                                StartupCommand: ${{ variables.StartupCommand }}
+                                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                                deploymentPackagePath: ${{ variables.deploymentPackagePath }}
+                                enableCustomDeployment: ${{ variables.enableCustomDeployment }} # only for LinuxOS
+                                replacetokensTargetFiles: ${{ variables.replacetokensTargetFiles }}
+                                RemoveAdditionalFilesFlag: ${{ variables.RemoveAdditionalFilesFlag }} # only for LinuxOS
+                                cachePurgePath: $(cachePurgePath)
+
+        - template: cicd/azure-swap-rollback-container.yml@templates
+          parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: 'Deploy_to_uat'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Swap
+                expectedStatusCode: 200
+                cachePurgePath: $(cachePurgePath)
+
+        - template: cicd/azure-swap-rollback-container.yml@templates
+          parameters:
+                resourceGroup: rgpaz${{ variables.env }}mlns001destin
+                environmentName: ${{ variables.environment }}
+                serviceConnection: ${{ variables.serviceConnectionKeyVault }}
+                jobDepends: ''
+                jobFails: 'uat_SwapTheSlots_Swap'
+                webAppName: ${{ variables.appName }}
+                slotName: stage
+                whitelist: false
+                path: ${{ variables.appPath }}
+                swapWithProduction: true
+                targetSlot: production
+                service: Rollback
+                expectedStatusCode: 200
+                cachePurgePath: $(cachePurgePath)
+
+

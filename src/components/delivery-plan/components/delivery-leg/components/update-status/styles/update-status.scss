@@ -1,0 +1,21 @@
+
+.update-delivery-order-status-modeal-content {
+    display: flex;
+    margin-bottom: var(--mdt-core-spacing-20px);
+    &__delivery-order {
+                &-number-header, &-confirmation-message {
+                    margin-top: var(--mdt-core-spacing-20px);
+                }
+        
+                &-number-value {
+                    font-weight: var(--mdt-brand-font-weight-bold);
+                }
+            }
+        
+            &__delivery-order-status {
+                margin-top: var(--mdt-core-spacing-20px);
+            }
+            &_mc-notification-wrapper {
+               margin-top: var(--mdt-core-spacing-20px);
+            }
+}

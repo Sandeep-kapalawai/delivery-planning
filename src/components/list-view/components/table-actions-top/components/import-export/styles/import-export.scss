@@ -1,0 +1,30 @@
+.import-export-excel {
+    display: flex;
+    align-items: center;
+
+    &_export-excel-button {
+        position: relative;
+
+        &_label {
+            display: flex;
+        }
+    }
+
+    &_export-excel-options {
+        width: max-content;
+        position: absolute;
+        top: 35px;
+        left: 0;
+        z-index: 999;
+
+        &_option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            mc-loading-indicator {
+                margin-left: var(--mdt-core-spacing-10px);
+            }
+        }
+    }
+}

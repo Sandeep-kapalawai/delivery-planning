@@ -1,0 +1,25 @@
+variables:
+  - name: deployment
+    value: Deploy_to_uat
+  - name: environment
+    value: uat
+  - name: env
+    value: ewu
+  - name: dd_env
+    value: uat
+  - name: webpackMode
+    value: development
+  - name: serviceConnectionKeyVault
+    value: "NewSCM_Non_Prod"
+  - name: keyVaultName
+    value: "kyvazewumlns003scmshard"
+  - name: secretsFilter
+    value: "destination-ui-v2-secure-gateway-secret"
+  - name: BASE_API_PATH
+    value: "https://api-uat.scm.maersk.com"
+  - name: AZURE_AD_MSAL_CLIENT_ID
+    value: "343c1416-1cb2-4c6c-bbf6-11b2d094da0e"
+  - name: AZURE_AD_MSAL_TENANT_ID
+    value: "05d75c05-fa1a-42e7-9cf1-eb416c396f2d"
+  - name: DESTINATION_SHELL_UI_URL
+    value: "https://scm-uat.maersk.com/scm/destination"

@@ -1,0 +1,10 @@
+.location-field {
+    &_becode,
+    &_name {
+        margin-bottom: var(--mdt-core-spacing-4px);
+    }
+
+    &_address {
+        color: var(--mdt-theme-palette-functional-600);
+    }
+}

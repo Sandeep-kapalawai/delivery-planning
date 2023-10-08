@@ -1,0 +1,21 @@
+
+.purchase-orders-section{
+    .table-wrapper {
+        max-height: calc(100vh - 200px);
+    }
+    .summary-section{
+        margin-bottom: 10px;
+    }
+    .summary-value{
+        font-weight: bold;
+    }
+    .summary_row{
+        border-radius: 5px;
+        background: var(--mdt-theme-palette-functional-100);
+        margin:0;
+        width: 100%;
+    }
+   
+}
+
+

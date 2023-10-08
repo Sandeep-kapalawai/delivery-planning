@@ -1,0 +1,35 @@
+variables:
+    - name: deployment
+      value: Deploy_to_Test
+    - name: environment
+      value: TEST
+    - name: env
+      value: ewt
+    - name: dd_env
+      value: test
+    - name: webpackMode
+      value: development
+    - name: serviceConnectionKeyVault
+      value: 'NewSCM_Non_Prod'
+    - name: keyVaultName
+      value: 'kyvazewtmlns001dst'
+    - name: secretsFilter
+      value: 'destination-ui-v2-secure-gateway-secret'
+    - name: BASE_API_PATH
+      value: 'https://api-test.scm.maersk.com'
+    - name: AZURE_AD_MSAL_CLIENT_ID
+      value: '343c1416-1cb2-4c6c-bbf6-11b2d094da0e'
+    - name: AZURE_AD_MSAL_TENANT_ID
+      value: '05d75c05-fa1a-42e7-9cf1-eb416c396f2d'
+    - name: DESTINATION_SHELL_UI_URL
+      value: 'https://scm-test.maersk.com/scm/destination'
+    - name: FINOPS_UI_URL
+      value: 'https://finops-test.cs.scm.maersk.com/job-costing/search/ets'
+    - name: TNT_UI_URL
+      value: 'https://scm-test.maersk.com/scp/cshub/tnt/container'
+    - name: AEM_UI_URL
+      value: 'https://scm-test.maersk.com/scp/cshub/alerts/rcaeditable'
+    - name: SCM_UI_MOP_APP_NAME
+      value: 'SCP-Test-DeliveryPlanning'
+    - name: SCM_UI_MOP_API_KEY
+      value: 'NaMXAz2x5y3cpZxA/rwcLAJCzq4byyqhXyQPl43xCp1xo5H6/G9AbPiGmqbaVA=='

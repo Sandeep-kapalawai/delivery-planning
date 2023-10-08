@@ -1,0 +1,35 @@
+variables:
+    - name: deployment
+      value: Deploy_to_Dev
+    - name: environment
+      value: DEV
+    - name: env
+      value: ewd
+    - name: dd_env
+      value: development
+    - name: webpackMode
+      value: development
+    - name: serviceConnectionKeyVault
+      value: 'NewSCM_Non_Prod'
+    - name: keyVaultName
+      value: 'kyvazewdmlns001dst'
+    - name: secretsFilter
+      value: 'destination-ui-v2-secure-gateway-secret'
+    - name: BASE_API_PATH
+      value: 'https://api-dev.scm.maersk.com'
+    - name: AZURE_AD_MSAL_CLIENT_ID
+      value: 'ec9caf45-89b9-4143-bfb8-2ab10c8f7be3'
+    - name: AZURE_AD_MSAL_TENANT_ID
+      value: '05d75c05-fa1a-42e7-9cf1-eb416c396f2d'
+    - name: DESTINATION_SHELL_UI_URL
+      value: 'https://scm-dev.maersk.com/scm/destination'
+    - name: FINOPS_UI_URL
+      value: 'https://finops-dev.cs.scm.maersk.com/job-costing/search/ets'
+    - name: TNT_UI_URL
+      value: 'https://scm-dev.maersk.com/scp/cshub/tnt/container'
+    - name: AEM_UI_URL
+      value: 'https://scm-dev.maersk.com/scp/cshub/alerts/rcaeditable'
+    - name: SCM_UI_MOP_APP_NAME
+      value: 'SCP-Dev-DeliveryPlanning'
+    - name: SCM_UI_MOP_API_KEY
+      value: '6zLbq2/ltVjWpht7Azv6tcw0dxI+Ww6aN9Ys/Euoj3KvPjHCJADRl6Xl+oesSA=='

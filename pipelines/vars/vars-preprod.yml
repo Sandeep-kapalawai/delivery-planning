@@ -1,0 +1,35 @@
+variables:
+    - name: deployment
+      value: Deploy_to_Pre_Prod
+    - name: environment
+      value: PREPROD
+    - name: env
+      value: ewr
+    - name: dd_env
+      value: preproduction
+    - name: webpackMode
+      value: production
+    - name: serviceConnectionKeyVault
+      value: 'NewSCM_Prod'
+    - name: keyVaultName
+      value: 'kyvazewrmlns001dst'
+    - name: secretsFilter
+      value: 'destination-ui-v2-secure-gateway-secret, destinationdp-lhci-build-token'
+    - name: BASE_API_PATH
+      value: 'https://api-preprod.scm.maersk.com'
+    - name: AZURE_AD_MSAL_CLIENT_ID
+      value: '1ddf3867-06db-4ada-b4f8-cfaae6cc5107'
+    - name: AZURE_AD_MSAL_TENANT_ID
+      value: '05d75c05-fa1a-42e7-9cf1-eb416c396f2d'
+    - name: DESTINATION_SHELL_UI_URL
+      value: 'https://scm-preprod.maersk.com/scm/destination'
+    - name: FINOPS_UI_URL
+      value: 'https://finops-preprod.cs.scm.maersk.com/job-costing/search/ets'
+    - name: TNT_UI_URL
+      value: 'https://scm-preprod.maersk.com/scp/cshub/tnt/container'
+    - name: AEM_UI_URL
+      value: 'https://scm-preprod.maersk.com/scp/cshub/alerts/rcaeditable'
+    - name: SCM_UI_MOP_APP_NAME
+      value: 'SCP-Preprod-DeliveryPlanning'
+    - name: SCM_UI_MOP_API_KEY
+      value: 'NaMXAz2x5y3dp5xAq7NPLDFyq6c/uqGoAiklHS53ZeHb/ykg6+ujG/V2Dj3jSw=='

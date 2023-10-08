@@ -1,0 +1,10 @@
+.transport-provider-picker {
+    position: relative;
+
+    &_list-container {
+        width: 100%;
+        position: absolute;
+        top: 62px;
+        z-index: 1;
+    }
+}

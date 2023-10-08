@@ -1,0 +1,45 @@
+export enum MDS_COMPONENT_TYPE {
+    global = 'global',
+    accordion = 'accordion',
+    avatar = 'avatar',
+    button = 'button',
+    checkbox = 'checkbox',
+    input = 'input',
+    inputDate = 'inputDate',
+    loadingIndicator = 'loadingIndicator',
+    multiselect = 'multiselect',
+    notification = 'notification',
+    select = 'select',
+    tabs = 'tabs',
+    tag = 'tag',
+    textarea = 'textarea',
+    tooltip = 'tooltip',
+    typeahead = 'typeahead',
+    radio = 'radio',
+}
+
+export enum MDS_COMPONENT_FIT_TYPE {
+    small = 'small',
+    medium = 'medium',
+    large = 'large',
+}
+
+export const MDS_COMPONENT_FIT: { [key in MDS_COMPONENT_TYPE]: MDS_COMPONENT_FIT_TYPE } = {
+    [MDS_COMPONENT_TYPE.global]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.accordion]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.avatar]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.button]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.checkbox]: MDS_COMPONENT_FIT_TYPE.large,
+    [MDS_COMPONENT_TYPE.input]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.radio]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.inputDate]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.loadingIndicator]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.multiselect]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.notification]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.select]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.tabs]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.tag]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.textarea]: MDS_COMPONENT_FIT_TYPE.small,
+    [MDS_COMPONENT_TYPE.tooltip]: MDS_COMPONENT_FIT_TYPE.medium,
+    [MDS_COMPONENT_TYPE.typeahead]: MDS_COMPONENT_FIT_TYPE.small,
+};

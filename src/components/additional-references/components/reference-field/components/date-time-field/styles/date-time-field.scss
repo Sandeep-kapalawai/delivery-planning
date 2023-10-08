@@ -1,0 +1,38 @@
+.date-time-field {
+    &_date-time-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &_date-picker {
+        width: 200px;
+    }
+
+    &_time-picker {
+        width: 115px;
+        padding-left: var(--mdt-core-spacing-8px);
+        margin-top: var(--mdt-core-spacing-20px);
+    }
+
+    &_error-hint-wrapper {
+        width: 100%;
+        margin: var(--mdt-core-spacing-4px) 0 0;
+    }
+
+    &_error,
+    &_hint {
+        display: flex;
+        justify-items: stretch;
+        justify-content: space-between;
+        font-size: var(--mdt-brand-font-size-s);
+        line-height: var(--mdt-brand-font-line-height-s);
+    }
+
+    &_error {
+        color: var(--mdt-theme-on-background-color-invalid);
+    }
+
+    &_hint {
+        color: var(--mdt-theme-on-background-color-hint);
+    }
+}

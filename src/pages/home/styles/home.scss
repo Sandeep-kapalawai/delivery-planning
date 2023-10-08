@@ -1,0 +1,8 @@
+.home {
+    height: calc(100vh - var(--dp-app-header-height));
+    padding: var(--mdt-core-spacing-16px);
+
+    &.opened-within-hub {
+        height: calc(100vh - var(--cs-scm-hub-header-height) - var(--dp-app-header-height));
+    }
+}

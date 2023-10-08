@@ -1,0 +1,11 @@
+variables:
+    - name: ReportID
+      value: 'DestinationPipelineRun-DeliveryPlanning-UI.Deployment'
+    - name: automationDir
+      value: 'UI/delivery-planning'
+    - name: UIApplicationUrl
+      value: 'https://scm-test.maersk.com/scp/cshub'
+    - name: CheckPassPercentage
+      value: true
+    - name: PassPercentage
+      value: 10

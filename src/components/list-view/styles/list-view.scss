@@ -1,0 +1,28 @@
+.list-view-table {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+
+    .table-wrapper {
+        flex: auto;
+    }
+
+    .notification-success {
+        margin-bottom: 4px;
+    }
+
+    .table-controls {
+        display: flex;
+        justify-content: end;
+        z-index: 999;
+        padding: var(--mdt-core-spacing-5px), var(--mdt-core-spacing-5px);
+    }
+
+    .cargoStuffing {
+        display: table;
+        justify-content: center;
+        background: var(--mdt-theme-input-disabled);
+        margin: 0px auto 0px auto;
+        padding: var(--mdt-core-spacing-5px);
+    }
+}
